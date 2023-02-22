@@ -25,7 +25,7 @@ app.post('/api/doc/:doc_id', auth, DocHandler.add);
 app.put('/api/doc/:doc_id', auth, DocHandler.update);
 app.delete('/api/doc/:doc_id', auth, DocHandler.delete);
 
-app.get('/api/links', auth, linksHandler.get);
+app.get('/api/links', linksHandler.get);
 
 
 

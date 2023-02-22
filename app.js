@@ -25,7 +25,7 @@ app.get('/api/doc/:doc_id', controlers_1.DocHandler.get);
 app.post('/api/doc/:doc_id', auth_1.default, controlers_1.DocHandler.add);
 app.put('/api/doc/:doc_id', auth_1.default, controlers_1.DocHandler.update);
 app.delete('/api/doc/:doc_id', auth_1.default, controlers_1.DocHandler.delete);
-app.get('/api/links', auth_1.default, controlers_1.linksHandler.get);
+app.get('/api/links', controlers_1.linksHandler.get);
 app.get('/api/sign-in', auth_1.default, getSignIn_1.default);
 app.post('/api/sign-in', controlers_1.SetSignIn);
 // app.get('*', (req, res) => {
