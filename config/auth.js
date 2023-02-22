@@ -13,9 +13,11 @@ const auth = (req, res, next) => {
         const token = req.session.token;
         const decoded = jsonwebtoken_1.default.verify(token, privateKye);
         req.username = decoded.username;
+        console.log('success login');
         next();
     }
     catch (error) {
+        console.log('faild login');
         res.send({
             success: false,
             isLogdin: 'no'

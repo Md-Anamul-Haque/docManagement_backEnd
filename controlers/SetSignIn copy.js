@@ -23,33 +23,47 @@ const newToken = (username) => __awaiter(void 0, void 0, void 0, function* () {
 });
 const SetSignIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b, _c, _d;
-    console.log(req.body);
-    if (((_a = req === null || req === void 0 ? void 0 : req.session) === null || _a === void 0 ? void 0 : _a.token) && jsonwebtoken_1.default.verify((_b = req === null || req === void 0 ? void 0 : req.session) === null || _b === void 0 ? void 0 : _b.token, privateKye)) {
-        res.send({
-            success: true,
-            isLogdin: 'yes'
-        });
-    }
-    else {
-        const user = yield api_modle_schema_1.DB_users.findOne({ username: (_c = req === null || req === void 0 ? void 0 : req.body) === null || _c === void 0 ? void 0 : _c.username });
-        bcrypt_1.default.compare((_d = req === null || req === void 0 ? void 0 : req.body) === null || _d === void 0 ? void 0 : _d.password, user === null || user === void 0 ? void 0 : user.password, function (err, result) {
-            var _a;
-            return __awaiter(this, void 0, void 0, function* () {
-                // result == true
-                if (result) {
-                    req.session.token = yield newToken((_a = req === null || req === void 0 ? void 0 : req.body) === null || _a === void 0 ? void 0 : _a.username);
-                    res.send({
-                        success: true,
-                        isLogdin: 'yes'
-                    });
-                }
-                else {
-                    res.send({
-                        success: false,
-                        isLogdin: 'no'
-                    });
-                }
+    try {
+        console.log('start');
+        if (((_a = req === null || req === void 0 ? void 0 : req.session) === null || _a === void 0 ? void 0 : _a.token) && jsonwebtoken_1.default.verify((_b = req === null || req === void 0 ? void 0 : req.session) === null || _b === void 0 ? void 0 : _b.token, privateKye)) {
+            res.send({
+                message: 'success',
+                success: true,
+                isLogdin: 'yes'
             });
+        }
+        else {
+            const user = yield api_modle_schema_1.DB_users.findOne({ username: (_c = req === null || req === void 0 ? void 0 : req.body) === null || _c === void 0 ? void 0 : _c.username });
+            bcrypt_1.default.compare((_d = req === null || req === void 0 ? void 0 : req.body) === null || _d === void 0 ? void 0 : _d.password, user === null || user === void 0 ? void 0 : user.password, function (err, result) {
+                var _a;
+                return __awaiter(this, void 0, void 0, function* () {
+                    // result == true
+                    if (result) {
+                        req.session.token = yield newToken((_a = req === null || req === void 0 ? void 0 : req.body) === null || _a === void 0 ? void 0 : _a.username);
+                        res.send({
+                            message: 'success',
+                            success: true,
+                            isLogdin: 'yes'
+                        });
+                    }
+                    else {
+                        console.log('false');
+                        res.send({
+                            message: 'invalid username or password',
+                            success: false,
+                            isLogdin: 'no'
+                        });
+                    }
+                });
+            });
+        }
+    }
+    catch (error) {
+        console.log(error.message);
+        res.status(500).send({
+            message: 'server error',
+            success: false,
+            isLogdin: 'no'
         });
     }
 });

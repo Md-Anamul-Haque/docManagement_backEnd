@@ -1,7 +1,6 @@
 import cors from 'cors';
 import express, { Express, NextFunction, Response } from 'express';
 import session from 'express-session';
-import path from 'path';
 import auth from './config/auth';
 import { DocHandler, linksHandler, SetSignIn } from './controlers';
 import getSignIn from './controlers/getSignIn';
@@ -30,12 +29,12 @@ app.get('/api/links', auth, linksHandler.get);
 
 
 
-app.get('/api/sign-in', getSignIn)
+app.get('/api/sign-in', auth, getSignIn)
 app.post('/api/sign-in', SetSignIn)
 
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, "public", "index.html"));
-});
+// app.get('*', (req, res) => {
+//     res.sendFile(path.join(__dirname, "public", "index.html"));
+// });
 
 
 

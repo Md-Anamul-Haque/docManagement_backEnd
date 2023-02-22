@@ -19,7 +19,7 @@ const api_modle_schema_1 = require("../modal/api.modle.schema");
 dotenv_1.default.config();
 const privateKye = process.env.JWT_TOKEN_SEC;
 const newToken = (username) => __awaiter(void 0, void 0, void 0, function* () {
-    return yield jsonwebtoken_1.default.sign({ username }, privateKye);
+    return jsonwebtoken_1.default.sign({ username }, privateKye);
 });
 const SetSignIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b, _c, _d;
@@ -35,15 +35,41 @@ const SetSignIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         else {
             const user = yield api_modle_schema_1.DB_users.findOne({ username: (_c = req === null || req === void 0 ? void 0 : req.body) === null || _c === void 0 ? void 0 : _c.username });
             bcrypt_1.default.compare((_d = req === null || req === void 0 ? void 0 : req.body) === null || _d === void 0 ? void 0 : _d.password, user === null || user === void 0 ? void 0 : user.password, function (err, result) {
-                var _a;
                 return __awaiter(this, void 0, void 0, function* () {
                     // result == true
                     if (result) {
-                        req.session.token = yield newToken((_a = req === null || req === void 0 ? void 0 : req.body) === null || _a === void 0 ? void 0 : _a.username);
-                        res.send({
-                            message: 'success',
-                            success: true,
-                            isLogdin: 'yes'
+                        req.session.regenerate(function (err) {
+                            var _a;
+                            return __awaiter(this, void 0, void 0, function* () {
+                                if (err) {
+                                    console.log('false1');
+                                    return res.send({
+                                        message: (err === null || err === void 0 ? void 0 : err.message) || err,
+                                        success: false,
+                                        isLogdin: 'no'
+                                    });
+                                }
+                                // store user information in session, typically a user id
+                                req.session.token = yield newToken((_a = req === null || req === void 0 ? void 0 : req.body) === null || _a === void 0 ? void 0 : _a.username);
+                                // save the session before redirection to ensure page
+                                // load does not happen before session is saved
+                                req.session.save(function (err) {
+                                    if (err) {
+                                        console.log('false1');
+                                        return res.send({
+                                            message: (err === null || err === void 0 ? void 0 : err.message) || err,
+                                            success: false,
+                                            isLogdin: 'no'
+                                        });
+                                    }
+                                    console.log('success');
+                                    return res.send({
+                                        message: 'success',
+                                        success: true,
+                                        isLogdin: 'yes'
+                                    });
+                                });
+                            });
                         });
                     }
                     else {

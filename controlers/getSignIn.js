@@ -13,26 +13,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const dotenv_1 = __importDefault(require("dotenv"));
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 dotenv_1.default.config();
 const getSignIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log('start');
-        const privateKye = process.env.JWT_TOKEN_SEC;
-        const token = req.session.token;
-        const decoded = jsonwebtoken_1.default.verify(token, privateKye);
-        if (decoded) {
-            res.send({
-                success: true,
-                isLogdin: 'yes'
-            });
-        }
-        else {
-            res.send({
-                success: false,
-                isLogdin: 'no'
-            });
-        }
+        res.send({
+            success: true,
+            isLogdin: 'yes'
+        });
     }
     catch (error) {
         res.send({

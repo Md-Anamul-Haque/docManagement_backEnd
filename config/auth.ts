@@ -10,8 +10,10 @@ const auth = (req: any, res: Response, next: NextFunction) => {
         const token = req.session.token;
         const decoded: any = jwt.verify(token, privateKye)
         req.username = decoded.username;
+        console.log('success login')
         next()
     } catch (error) {
+        console.log('faild login')
         res.send({
             success: false,
             isLogdin: 'no'
@@ -25,3 +27,4 @@ export default auth
 // req.session.destroy(function (err: any) {
         //     // session updated
         // })
+
