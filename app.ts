@@ -1,16 +1,17 @@
 import cors from 'cors';
 import express, { Express, NextFunction, Response } from 'express';
-import session from 'express-session';
+// import session from 'express-session';
+import path from 'path';
 import auth from './config/auth';
 import { DocHandler, linksHandler, SetSignIn } from './controlers';
 import getSignIn from './controlers/getSignIn';
 const app: Express = express();
-// app.set('trust proxy', 1) // trust first proxy
-app.use(session({
-    secret: 'keyboardcat',
-    resave: false,
-    saveUninitialized: true,
-}))
+app.set('trust proxy', 1) // trust first proxy
+// app.use(session({
+//     secret: 'keyboardcat',
+//     resave: false,
+//     saveUninitialized: true,
+// }))
 
 
 app.use(express.urlencoded({ extended: true }));
@@ -30,20 +31,20 @@ app.get('/api/links', linksHandler.get);
 
 
 app.get('/api/sign-in', auth, getSignIn)
-app.post('/api/sign-in', SetSignIn)
+app.post('/api/sign-in', SetSignIn);
 
-// app.get('*', (req, res) => {
-//     res.sendFile(path.join(__dirname, "public", "index.html"));
-// });
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "index.html"));
+});
 
 
 
 
 // import bcrypt from 'bcrypt';
 // import { DB_users } from './modal/api.modle.schema';
-// const user = { username: 'Anamul-Nocrashsoft', password: 'ar.Nocrashsoft.password' }
+// // const user = { username: 'Anamul-Nocrashsoft', password: 'ar.Nocrashsoft.password' }
 // // const user = { username: 'Rokan-Nocrashsoft', password: 'ar.Nocrashsoft.password' }
-// // const user = { username: 'a', password: 'a' }
+// const user = { username: 'a', password: 'a' }
 // setTimeout(() => {
 //     bcrypt.hash(user.password, 10, async function (err, hash) {
 //         // Store hash in your password DB.

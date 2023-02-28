@@ -13,8 +13,8 @@ const newToken = async (username: string) => {
 }
 const SetSignIn = async (req: any, res: Response) => {
     try {
-        console.log('start')
-        if (req?.session?.token && jwt.verify(req?.session?.token, privateKye)) {
+        const token = req.headers.Authorization;
+        if (token && jwt.verify(token, privateKye)) {
             res.send({
                 message: 'success',
                 success: true,
@@ -25,37 +25,12 @@ const SetSignIn = async (req: any, res: Response) => {
             bcrypt.compare(req?.body?.password, user?.password, async function (err, result) {
                 // result == true
                 if (result) {
-                    req.session.regenerate(async function (err: any) {
-                        if (err) {
-                            console.log('false1')
-                            return res.send({
-                                message: err?.message || err,
-                                success: false,
-                                isLogdin: 'no'
-                            })
-                        }
-
-                        // store user information in session, typically a user id
-                        req.session.token = await newToken(req?.body?.username)
-
-                        // save the session before redirection to ensure page
-                        // load does not happen before session is saved
-                        req.session.save(function (err: any) {
-                            if (err) {
-                                console.log('false1')
-                                return res.send({
-                                    message: err?.message || err,
-                                    success: false,
-                                    isLogdin: 'no'
-                                })
-                            }
-                            console.log('success')
-                            return res.send({
-                                message: 'success',
-                                success: true,
-                                isLogdin: 'yes'
-                            })
-                        })
+                    console.log('success')
+                    return res.send({
+                        message: 'success',
+                        success: true,
+                        isLogdin: 'yes',
+                        token: await newToken(req.body.username)
                     })
                 } else {
                     console.log('false')

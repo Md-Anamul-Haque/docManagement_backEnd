@@ -11,15 +11,21 @@ const add_doc = async (req: any, res: Response) => {
     doc_id = doc_id.replace(/\./g, '-')
     console.log({ doc_id })
     // if already have this document id --> update now
-    if (await DB_doc.findOneAndUpdate({ doc_id }, datas)) {
+    // if (await DB_doc.findOneAndUpdate({ doc_id }, datas)) {
+    //   console.log('updateing')
+    //   return update_doc(req, res);
+    // };
+    if (await DB_doc.findOne({ doc_id })) {
       console.log('updateing')
       return update_doc(req, res);
     };
 
     // else create now 
     datas.doc_id = doc_id;
-    const newDoc = new DB_doc(datas);
+    const newDoc = new DB_doc({ ...datas });
     const doc = await newDoc.save();
+    console.log({ doc_id })
+
     if (doc) {
       res.status(201).send({
         message: ' created success',

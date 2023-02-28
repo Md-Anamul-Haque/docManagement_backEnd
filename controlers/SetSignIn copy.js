@@ -22,10 +22,10 @@ const newToken = (username) => __awaiter(void 0, void 0, void 0, function* () {
     return yield jsonwebtoken_1.default.sign({ username }, privateKye);
 });
 const SetSignIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b, _c, _d;
+    var _a, _b, _c;
     try {
-        console.log('start');
-        if (((_a = req === null || req === void 0 ? void 0 : req.session) === null || _a === void 0 ? void 0 : _a.token) && jsonwebtoken_1.default.verify((_b = req === null || req === void 0 ? void 0 : req.session) === null || _b === void 0 ? void 0 : _b.token, privateKye)) {
+        const token = (_a = req === null || req === void 0 ? void 0 : req.headers) === null || _a === void 0 ? void 0 : _a.Authorization;
+        if (token && jsonwebtoken_1.default.verify(token, privateKye)) {
             res.send({
                 message: 'success',
                 success: true,
@@ -33,17 +33,19 @@ const SetSignIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             });
         }
         else {
-            const user = yield api_modle_schema_1.DB_users.findOne({ username: (_c = req === null || req === void 0 ? void 0 : req.body) === null || _c === void 0 ? void 0 : _c.username });
-            bcrypt_1.default.compare((_d = req === null || req === void 0 ? void 0 : req.body) === null || _d === void 0 ? void 0 : _d.password, user === null || user === void 0 ? void 0 : user.password, function (err, result) {
+            const user = yield api_modle_schema_1.DB_users.findOne({ username: (_b = req === null || req === void 0 ? void 0 : req.body) === null || _b === void 0 ? void 0 : _b.username });
+            bcrypt_1.default.compare((_c = req === null || req === void 0 ? void 0 : req.body) === null || _c === void 0 ? void 0 : _c.password, user === null || user === void 0 ? void 0 : user.password, function (err, result) {
                 var _a;
                 return __awaiter(this, void 0, void 0, function* () {
                     // result == true
                     if (result) {
-                        req.session.token = yield newToken((_a = req === null || req === void 0 ? void 0 : req.body) === null || _a === void 0 ? void 0 : _a.username);
+                        // req.session.token = await newToken(req?.body?.username)
+                        const token = yield newToken((_a = req === null || req === void 0 ? void 0 : req.body) === null || _a === void 0 ? void 0 : _a.username);
                         res.send({
                             message: 'success',
                             success: true,
-                            isLogdin: 'yes'
+                            isLogdin: 'yes',
+                            token
                         });
                     }
                     else {

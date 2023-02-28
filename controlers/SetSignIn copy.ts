@@ -13,8 +13,8 @@ const newToken = async (username: string) => {
 }
 const SetSignIn = async (req: any, res: Response) => {
     try {
-        console.log('start')
-        if (req?.session?.token && jwt.verify(req?.session?.token, privateKye)) {
+        const token = req?.headers?.Authorization;
+        if (token && jwt.verify(token, privateKye)) {
             res.send({
                 message: 'success',
                 success: true,
@@ -25,11 +25,13 @@ const SetSignIn = async (req: any, res: Response) => {
             bcrypt.compare(req?.body?.password, user?.password, async function (err, result) {
                 // result == true
                 if (result) {
-                    req.session.token = await newToken(req?.body?.username)
+                    // req.session.token = await newToken(req?.body?.username)
+                    const token = await newToken(req?.body?.username)
                     res.send({
                         message: 'success',
                         success: true,
-                        isLogdin: 'yes'
+                        isLogdin: 'yes',
+                        token
                     })
                 } else {
                     console.log('false')
