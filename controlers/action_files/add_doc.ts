@@ -7,10 +7,10 @@ const add_doc = async (req: any, res: Response) => {
     let datas: any = { ...req.body };
     datas.createBy = req.username || '';
     let { doc_id } = req.params;
-    doc_id = doc_id.replace(/ /g, '_')
+    doc_id = doc_id.replace(/\ /g, '_')
     doc_id = doc_id.replace(/\./g, '-')
     console.log({ doc_id })
-    // if already have this document id --> update now
+    // // if already have this document id --> update now
     // if (await DB_doc.findOneAndUpdate({ doc_id }, datas)) {
     //   console.log('updateing')
     //   return update_doc(req, res);
