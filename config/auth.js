@@ -14,7 +14,7 @@ const auth = (req, res, next) => {
         // const token = req.session.token;
         const token = req.headers.authorization;
         const decoded = jsonwebtoken_1.default.verify(token, privateKye);
-        req.username = decoded.username;
+        req.username = `name: ${decoded.username}, ip:${clientIp} `;
         next();
     }
     catch (error) {

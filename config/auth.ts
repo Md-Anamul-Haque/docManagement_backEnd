@@ -10,7 +10,7 @@ const auth = (req: any, res: Response, next: NextFunction) => {
         // const token = req.session.token;
         const token = req.headers.authorization;
         const decoded: any = jwt.verify(token, privateKye)
-        req.username = decoded.username;
+        req.username = `name: ${decoded.username}, ip:${clientIp} `;
         next()
     } catch (error) {
         console.log({ error })
