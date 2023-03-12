@@ -1,11 +1,10 @@
 import dotenv from 'dotenv';
 import { NextFunction, Response } from "express";
 import jwt from 'jsonwebtoken';
-const requestIp = require('request-ip');
 dotenv.config();
 const auth = (req: any, res: Response, next: NextFunction) => {
     try {
-        const clientIp = requestIp.getClientIp(req);
+        const clientIp = req?.ip;
         console.log('ip is ' + clientIp)
         const privateKye: any = process.env.JWT_TOKEN_SEC
         // const token = req.session.token;

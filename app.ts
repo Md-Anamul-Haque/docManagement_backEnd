@@ -18,9 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
 app.use(express.static("public"));
-
-app.use(cors());
-
+app.options('*', cors())
 app.get('/api/doc/:doc_id', DocHandler.get);
 app.post('/api/doc/:doc_id', auth, DocHandler.add);
 app.put('/api/doc/:doc_id', auth, DocHandler.update);

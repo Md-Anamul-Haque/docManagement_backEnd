@@ -21,7 +21,7 @@ app.use(express_1.default.urlencoded({ extended: true }));
 app.use(express_1.default.json());
 app.use((0, cors_1.default)());
 app.use(express_1.default.static("public"));
-app.use((0, cors_1.default)());
+app.options('*', (0, cors_1.default)());
 app.get('/api/doc/:doc_id', controlers_1.DocHandler.get);
 app.post('/api/doc/:doc_id', auth_1.default, controlers_1.DocHandler.add);
 app.put('/api/doc/:doc_id', auth_1.default, controlers_1.DocHandler.update);

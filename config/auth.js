@@ -5,11 +5,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const dotenv_1 = __importDefault(require("dotenv"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const requestIp = require('request-ip');
 dotenv_1.default.config();
 const auth = (req, res, next) => {
     try {
-        const clientIp = requestIp.getClientIp(req);
+        const clientIp = req === null || req === void 0 ? void 0 : req.ip;
         console.log('ip is ' + clientIp);
         const privateKye = process.env.JWT_TOKEN_SEC;
         // const token = req.session.token;

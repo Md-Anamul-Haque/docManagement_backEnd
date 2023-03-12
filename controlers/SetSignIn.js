@@ -19,13 +19,13 @@ const api_modle_schema_1 = require("../modal/api.modle.schema");
 dotenv_1.default.config();
 const privateKye = process.env.JWT_TOKEN_SEC;
 const newToken = (username) => __awaiter(void 0, void 0, void 0, function* () {
-    return jsonwebtoken_1.default.sign({ username }, privateKye);
+    return jsonwebtoken_1.default.sign({ username }, privateKye, { expiresIn: '2h' });
 });
 const SetSignIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b;
+    var _a, _b, _c, _d;
     try {
-        const token = req.headers.Authorization;
-        if (token && jsonwebtoken_1.default.verify(token, privateKye)) {
+        console.log('start');
+        if (((_a = req === null || req === void 0 ? void 0 : req.session) === null || _a === void 0 ? void 0 : _a.token) && jsonwebtoken_1.default.verify((_b = req === null || req === void 0 ? void 0 : req.session) === null || _b === void 0 ? void 0 : _b.token, privateKye)) {
             res.send({
                 message: 'success',
                 success: true,
@@ -33,17 +33,43 @@ const SetSignIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             });
         }
         else {
-            const user = yield api_modle_schema_1.DB_users.findOne({ username: (_a = req === null || req === void 0 ? void 0 : req.body) === null || _a === void 0 ? void 0 : _a.username });
-            bcrypt_1.default.compare((_b = req === null || req === void 0 ? void 0 : req.body) === null || _b === void 0 ? void 0 : _b.password, user === null || user === void 0 ? void 0 : user.password, function (err, result) {
+            const user = yield api_modle_schema_1.DB_users.findOne({ username: (_c = req === null || req === void 0 ? void 0 : req.body) === null || _c === void 0 ? void 0 : _c.username });
+            bcrypt_1.default.compare((_d = req === null || req === void 0 ? void 0 : req.body) === null || _d === void 0 ? void 0 : _d.password, user === null || user === void 0 ? void 0 : user.password, function (err, result) {
                 return __awaiter(this, void 0, void 0, function* () {
                     // result == true
                     if (result) {
-                        console.log('success');
-                        return res.send({
-                            message: 'success',
-                            success: true,
-                            isLogdin: 'yes',
-                            token: yield newToken(req.body.username)
+                        req.session.regenerate(function (err) {
+                            var _a;
+                            return __awaiter(this, void 0, void 0, function* () {
+                                if (err) {
+                                    console.log('false1');
+                                    return res.send({
+                                        message: (err === null || err === void 0 ? void 0 : err.message) || err,
+                                        success: false,
+                                        isLogdin: 'no'
+                                    });
+                                }
+                                // store user information in session, typically a user id
+                                req.session.token = yield newToken((_a = req === null || req === void 0 ? void 0 : req.body) === null || _a === void 0 ? void 0 : _a.username);
+                                // save the session before redirection to ensure page
+                                // load does not happen before session is saved
+                                req.session.save(function (err) {
+                                    if (err) {
+                                        console.log('false1');
+                                        return res.send({
+                                            message: (err === null || err === void 0 ? void 0 : err.message) || err,
+                                            success: false,
+                                            isLogdin: 'no'
+                                        });
+                                    }
+                                    console.log('success');
+                                    return res.send({
+                                        message: 'success',
+                                        success: true,
+                                        isLogdin: 'yes'
+                                    });
+                                });
+                            });
                         });
                     }
                     else {
